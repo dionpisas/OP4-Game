@@ -42,7 +42,7 @@ var Game = /** @class */ (function () {
         this.game.camera.follow(this.spaceshipSprite);
     };
     Game.prototype.update = function () {
-        //sets keyboard controls
+        //sets keyboard controlss
         this.spaceshipSprite.body.setZeroVelocity();
         this.game.input.update();
         if (this.Cursors.up.isDown) {
