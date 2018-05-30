@@ -49,8 +49,95 @@ module Game {
         constructor() {
             super()
         }
+        game: Phaser.Game
+        star: Phaser.Sprite
+        Sprite: Phaser.Sprite
+       
+        spaceshipSprite: Phaser.Sprite
+       
+        Cursors: Phaser.CursorKeys
+        Keyboard: Phaser.Keyboard
+        uiSprite: Phaser.Sprite
+        popup: Phaser.Sprite
+        confirm: Phaser.Button
+        cancel: Phaser.Button
+        text: Phaser.Text
+        text1: Phaser.Text
+        timeDelay: number = 0
+        preload() {
+            this.game.load.image('player', '../dev/Assets/graphics/spaceship.png');
+            this.game.load.image("ui", "../dev/Assets/Graphics/ui.png")
+            this.game.load.image("star", "../dev/Assets/Graphics/star.png")
+            this.game.load.image("popup", "../dev/Assets/Graphics/popup.png")
+            this.game.load.image("button", "../dev/Assets/graphics/button.png")
+        }
         create() {
-              console.log("minigame started")
+
+            // Start Physics engine set world bounds and create stars
+            this.game.physics.startSystem(Phaser.Physics.ARCADE);
+            this.game.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
+
+            for (let i = 0; i < 200; i++) {
+                this.star = this.game.add.sprite(this.game.world.randomX, this.game.world.randomY, "star")
+
+            }
+
+           
+
+         
+
+            // Spaceship settings
+            this.spaceshipSprite = this.game.add.sprite(1165, 1916, 'player');
+            this.game.physics.enable(this.spaceshipSprite, Phaser.Physics.ARCADE);
+            this.spaceshipSprite.body.velocity.y = 100;
+            
+            this.spaceshipSprite.body.collideWorldBounds = true
+            this.spaceshipSprite.body.setSize(10, 10, 15, 20)
+            this.spaceshipSprite.body.setCircle(20)
+
+            // popup settings
+       
+           
+
+            //add keyboard controls
+            this.Cursors = this.game.input.keyboard.createCursorKeys();
+            this.Keyboard = this.game.input.keyboard
+            this.game.camera.follow(this.spaceshipSprite);
+
+            
+
+        }
+
+        update() {
+
+          
+
+
+
+            //sets keyboard controls
+            //this.spaceshipSprite.body.setZeroVelocity()
+            this.game.input.update()
+            if (this.Cursors.up.isDown) {
+                this.spaceshipSprite.body.velocity.y = -300
+
+            }
+            else if (this.Cursors.down.isDown) {
+                this.spaceshipSprite.body.velocity.y = 300
+
+            }
+            if (this.Cursors.left.isDown) {
+                this.spaceshipSprite.body.velocity.x = -300;
+            }
+            else if (this.Cursors.right.isDown) {
+                this.spaceshipSprite.body.velocity.x = 300
+            }
+            if (this.Cursors.up.isUp && this.Cursors.down.isUp && this.Cursors.left.isUp && this.Cursors.right.isUp) {
+                this.spaceshipSprite.body.velocity.y = 0
+                this.spaceshipSprite.body.velocity.x = 0
+            }
+
+
+
         }
     }
     export class GameRunningState extends Phaser.State {
@@ -280,7 +367,7 @@ module Game {
 
         }
         confirmm() {
-            console.log("start minigame")
+            this.game.state.start("MiniGameState") 
         }
         cancell() {
             this.confirm.pendingDestroy = true
@@ -302,7 +389,7 @@ module Game {
         game: Phaser.Game
 
         constructor() {
-            this.game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.CANVAS, 'content')
+            this.game = new Phaser.Game(window.innerWidth - 20, window.innerHeight - 20, Phaser.CANVAS, 'content')
 
             this.game.state.add("GameRunningState", GameRunningState, false)
             this.game.state.add("MiniGameState",MiniGameState ,false)
