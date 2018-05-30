@@ -1,7 +1,0 @@
-D:\Users\Amy\Documents\GitHub\CLE-OP4-Game\bin\TypeScriptHTMLApp1.dll.config
-D:\Users\Amy\Documents\GitHub\CLE-OP4-Game\bin\TypeScriptHTMLApp1.dll
-D:\Users\Amy\Documents\GitHub\CLE-OP4-Game\bin\TypeScriptHTMLApp1.pdb
-D:\Users\Amy\Documents\GitHub\CLE-OP4-Game\obj\Debug\CLE-OP4-Game.csprojResolveAssemblyReference.cache
-D:\Users\Amy\Documents\GitHub\CLE-OP4-Game\obj\Debug\CLE-OP4-Game.csproj.CoreCompileInputs.cache
-D:\Users\Amy\Documents\GitHub\CLE-OP4-Game\obj\Debug\TypeScriptHTMLApp1.dll
-D:\Users\Amy\Documents\GitHub\CLE-OP4-Game\obj\Debug\TypeScriptHTMLApp1.pdb
