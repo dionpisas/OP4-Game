@@ -2,6 +2,7 @@
 
 module Game {
 
+
     export class TitleScreenState extends Phaser.State {
         game: Phaser.Game
         constructor() {
@@ -30,10 +31,13 @@ module Game {
     export class SpaceshipScreenState extends Phaser.State {
         game: Phaser.Game
         text: Phaser.Text
+        playerSprite:any
         constructor() {
             super()
         }
-        spaceshipImage: Phaser.Sprite
+        spaceship1: Phaser.Button
+        spaceship2: Phaser.Button
+        spaceship3: Phaser.Button
 
         preload() {
             this.load.image("spaceship1", "../dev/Assets/Graphics/Spaceship1.png")
@@ -41,15 +45,17 @@ module Game {
             this.load.image("spaceship3", "../dev/Assets/Graphics/Spaceship3.png")
         }
         create() {
-            this.spaceshipImage = this.add.sprite(500, 300, "spaceship1")
-            this.spaceshipImage = this.add.sprite(700, 300, "spaceship2")
-            this.spaceshipImage = this.add.sprite(900, 300, "spaceship3")
+            this.spaceship1 = this.add.button(500, 300, "spaceship1",  this.spaceshipClicked, this, 2, 1, 0)
+            this.spaceship2 = this.add.button(700, 300, "spaceship2",  this.spaceshipClicked, this, 2, 1, 0)
+            this.spaceship3 = this.add.button(900, 300, "spaceship3",  this.spaceshipClicked, this, 2, 1, 0)
             this.text = this.game.add.text(650, 200, 'Kies je Ruimteschip', { font: '20px Arial', fill: '#ffffff' })
-            this.input.onTap.addOnce(this.spaceshipClicked, this) // <-- that um, this is extremely important
+          //  this.input.onTap.addOnce(this.spaceshipClicked, this) // <-- that um, this is extremely important
         }
-        spaceshipClicked() {
+        spaceshipClicked(spaceship:any) {
             this.game.state.start("GameRunningState")
-            console.log(this.spaceshipClicked)
+            this.playerSprite = spaceship.key
+            console.log(this.playerSprite)
+            
         }
     }
 
@@ -119,8 +125,8 @@ module Game {
                 this.popup = this.game.add.sprite(window.innerWidth / 2.7, window.innerHeight / 2.7, 'popup')
                 this.popup.alpha = 0.8
              //   this.game.add.text(this.popup.x / 1.3 + 180, this.popup.y + 15, 'Planeet ontdekt!', { font: '40px Arial', fill: '#ffffff' })
-                this.confirm = this.game.add.button(this.popup.x , this.popup.y + 209, 'button', this.confirmm, this, 2, 1, 0)
-                this.cancel = this.game.add.button(this.popup.x + 192, this.popup.y + 209, 'button1', this.cancell, this, 2, 1, 0)
+            //    this.confirm = this.game.add.button(this.popup.x , this.popup.y + 209, 'button', this.confirmm, this, 2, 1, 0)
+          //      this.cancel = this.game.add.button(this.popup.x + 192, this.popup.y + 209, 'button1', this.cancell, this, 2, 1, 0)
 
              //   this.text = this.game.add.text(this.popup.x , this.popup.y+ 216, ' Probeer opnieuw           Terug ontdekken', { font: '20px Arial', fill: '#ffffff' })
 
@@ -173,6 +179,8 @@ module Game {
             this.game.load.image("button", "../dev/Assets/graphics/button.png")
             this.game.load.image("asteroid", "../dev/Assets/graphics/2.png")
             this.game.load.image("hearts", "../dev/Assets/graphics/hearts.png")
+            this.game.load.image("hearts1", "../dev/Assets/graphics/hearts1.png")
+            this.game.load.image("hearts2", "../dev/Assets/graphics/hearts2.png")
             this.game.load.spritesheet("kaboom", "../dev/Assets/graphics/explode.png", 128, 128);
         }
         create() {
@@ -198,10 +206,11 @@ module Game {
 
             // hearts settings
             if(this.life > 2){
-                this.game.add.sprite(window.innerWidth - 100, 100, "hearts")
-                this.game.add.sprite(window.innerWidth - 170, 100, "hearts")
-                this.game.add.sprite(window.innerWidth - 240, 100, "hearts")
+                this.game.add.sprite(window.innerWidth - 250, 50, "hearts")
+             //   this.game.add.sprite(window.innerWidth - 170, 100, "hearts")
+               // this.game.add.sprite(window.innerWidth - 240, 100, "hearts")
             }
+
 
             // for(let i = 0; i < this.life; i++){
             //     let heatspos = 100
@@ -241,7 +250,13 @@ module Game {
            this.timePassed +=1
            console.log(this.timePassed);
            
-           
+           if(this.life == 2){
+            this.game.add.sprite(window.innerWidth - 250, 50, "hearts1")
+        }
+        else if(this.life == 1){
+            this.game.add.sprite(window.innerWidth - 250, 50, "hearts2")
+            
+        }
             if(this.timePassed == 1000){
                
                 
@@ -343,6 +358,7 @@ module Game {
         buttonUp: Phaser.Button
         pad: Phaser.Gamepad
         stick:any
+        spaceshipSprite: Game.SpaceshipScreenState.spaceshipSprite
         
  
         preload() {
@@ -367,7 +383,7 @@ module Game {
             
         }
         create() {
-
+console.log(this.spaceshipSprite)
             // Start Physics engine set world bounds and create stars
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
             this.game.world.setBounds(0, 0, 3000, 3000);
@@ -664,7 +680,7 @@ module Game {
             this.game.state.add("SpaceshipScreenState", SpaceshipScreenState, false)
             this.game.state.add("GameOverScreenState", GameOverScreenState, false)
             this.game.state.add("WinScreenState", WinScreenState, false)
-            this.game.state.start("WinScreenState", true, true)
+            this.game.state.start("TitleScreenState", true, true)
 
             // this.game.state.start("TitleScreenState", true, true)
         }

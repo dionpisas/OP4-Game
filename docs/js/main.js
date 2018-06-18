@@ -44,15 +44,15 @@ var Game;
             this.load.image("spaceship3", "../dev/Assets/Graphics/Spaceship3.png");
         };
         SpaceshipScreenState.prototype.create = function () {
-            this.spaceshipImage = this.add.sprite(500, 300, "spaceship1");
-            this.spaceshipImage = this.add.sprite(700, 300, "spaceship2");
-            this.spaceshipImage = this.add.sprite(900, 300, "spaceship3");
+            this.spaceship1 = this.add.button(500, 300, "spaceship1", this.spaceshipClicked, this, 2, 1, 0);
+            this.spaceship2 = this.add.button(700, 300, "spaceship2", this.spaceshipClicked, this, 2, 1, 0);
+            this.spaceship3 = this.add.button(900, 300, "spaceship3", this.spaceshipClicked, this, 2, 1, 0);
             this.text = this.game.add.text(650, 200, 'Kies je Ruimteschip', { font: '20px Arial', fill: '#ffffff' });
-            this.input.onTap.addOnce(this.spaceshipClicked, this);
         };
-        SpaceshipScreenState.prototype.spaceshipClicked = function () {
+        SpaceshipScreenState.prototype.spaceshipClicked = function (spaceship) {
             this.game.state.start("GameRunningState");
-            console.log(this.spaceshipClicked);
+            this.playerSprite = spaceship.key;
+            console.log(this.playerSprite);
         };
         return SpaceshipScreenState;
     }(Phaser.State));
@@ -101,8 +101,6 @@ var Game;
         WinScreenState.prototype.create = function () {
             this.popup = this.game.add.sprite(window.innerWidth / 2.7, window.innerHeight / 2.7, 'popup');
             this.popup.alpha = 0.8;
-            this.confirm = this.game.add.button(this.popup.x, this.popup.y + 209, 'button', this.confirmm, this, 2, 1, 0);
-            this.cancel = this.game.add.button(this.popup.x + 192, this.popup.y + 209, 'button1', this.cancell, this, 2, 1, 0);
             this.timeDelay = this.game.time.now + 10000000000;
         };
         WinScreenState.prototype.confirmm = function () {
@@ -132,6 +130,8 @@ var Game;
             this.game.load.image("button", "../dev/Assets/graphics/button.png");
             this.game.load.image("asteroid", "../dev/Assets/graphics/2.png");
             this.game.load.image("hearts", "../dev/Assets/graphics/hearts.png");
+            this.game.load.image("hearts1", "../dev/Assets/graphics/hearts1.png");
+            this.game.load.image("hearts2", "../dev/Assets/graphics/hearts2.png");
             this.game.load.spritesheet("kaboom", "../dev/Assets/graphics/explode.png", 128, 128);
         };
         MiniGameState.prototype.create = function () {
@@ -146,9 +146,7 @@ var Game;
                 this.asteroidSprite.push(this.game.add.sprite(posy, posx, 'asteroid'));
             }
             if (this.life > 2) {
-                this.game.add.sprite(window.innerWidth - 100, 100, "hearts");
-                this.game.add.sprite(window.innerWidth - 170, 100, "hearts");
-                this.game.add.sprite(window.innerWidth - 240, 100, "hearts");
+                this.game.add.sprite(window.innerWidth - 250, 50, "hearts");
             }
             this.game.physics.enable(this.asteroidSprite, Phaser.Physics.ARCADE);
             this.spaceshipSprite = this.game.add.sprite(1165, 1916, 'player');
@@ -166,6 +164,12 @@ var Game;
             var _this = this;
             this.timePassed += 1;
             console.log(this.timePassed);
+            if (this.life == 2) {
+                this.game.add.sprite(window.innerWidth - 250, 50, "hearts1");
+            }
+            else if (this.life == 1) {
+                this.game.add.sprite(window.innerWidth - 250, 50, "hearts2");
+            }
             if (this.timePassed == 1000) {
                 this.game.state.start("WinScreenState", true, false);
                 this.life = 3;
@@ -246,6 +250,7 @@ var Game;
             this.game.load.image("buttonLeft", '../dev/assets/graphics/buttonLeft.png');
         };
         GameRunningState.prototype.create = function () {
+            console.log(this.spaceshipSprite);
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
             this.game.world.setBounds(0, 0, 3000, 3000);
             for (var i = 0; i < 200; i++) {
@@ -502,7 +507,7 @@ var Game;
             this.game.state.add("SpaceshipScreenState", SpaceshipScreenState, false);
             this.game.state.add("GameOverScreenState", GameOverScreenState, false);
             this.game.state.add("WinScreenState", WinScreenState, false);
-            this.game.state.start("WinScreenState", true, true);
+            this.game.state.start("TitleScreenState", true, true);
         }
         return SpaceGame;
     }());
