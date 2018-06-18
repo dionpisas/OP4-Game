@@ -1,6 +1,6 @@
-module Game {
 /// <reference path="phaser/phaser.d.ts" />
 
+module Game {
 
     export class TitleScreenState extends Phaser.State {
         game: Phaser.Game
@@ -53,6 +53,90 @@ module Game {
         }
     }
 
+    export class GameOverScreenState extends Phaser.State{
+        constructor(){
+            super()
+        }
+        game : Phaser.Game
+        popup : Phaser.Sprite
+        confirmm: Phaser.Button
+        cancell: Phaser.Button
+        text: Phaser.Text
+        text1: Phaser.Text
+        timeDelay: number = 0
+        
+        
+        preload(){
+            this.load.image("popup", "../dev/Assets/Graphics/popup2.png")
+            this.game.load.image("button", "../dev/Assets/graphics/button.png")
+        }
+
+        create(){
+            
+                this.popup = this.game.add.sprite(window.innerWidth / 2.7, window.innerHeight / 2.7, 'popup')
+                this.popup.alpha = 0.8
+                this.game.add.text(this.popup.x / 1.3 + 170, this.popup.y + 10, ' Game over!', { font: '50px Arial', fill: '#ffffff' })
+                this.confirm = this.game.add.button(this.popup.x , this.popup.y + 200, 'button', this.confirmm, this, 2, 1, 0)
+                this.cancel = this.game.add.button(this.popup.x + 193, this.popup.y + 209, 'button', this.cancell, this, 2, 1, 0)
+
+                this.text = this.game.add.text(this.popup.x , this.popup.y+ 216, ' Probeer opnieuw           Terug ontdekken', { font: '20px Arial', fill: '#ffffff' })
+
+                this.timeDelay = this.game.time.now + 10000000000
+            
+        }
+
+        confirmm(){
+            this.game.state.start("MiniGameState", true, true)
+        }
+
+        cancell(){
+            this.game.state.start("GameRunningState", true, false)
+        }
+
+    }
+
+    export class WinScreenState extends Phaser.State{
+        constructor(){
+            super()
+        }
+        game : Phaser.Game
+        popup : Phaser.Sprite
+        confirmm: Phaser.Button
+        cancell: Phaser.Button
+        text: Phaser.Text
+        text1: Phaser.Text
+        timeDelay: number = 0
+        
+        
+        preload(){
+            this.load.image("popup", "../dev/Assets/Graphics/popup2.png")
+            this.game.load.image("button", "../dev/Assets/graphics/button.png")
+        }
+
+        create(){
+            
+                this.popup = this.game.add.sprite(window.innerWidth / 2.7, window.innerHeight / 2.7, 'popup')
+                this.popup.alpha = 0.8
+                this.game.add.text(this.popup.x / 1.3 + 125, this.popup.y + 10, 'Planeet ontdekt!', { font: '50px Arial', fill: '#ffffff' })
+                this.confirm = this.game.add.button(this.popup.x , this.popup.y + 200, 'button', this.confirmm, this, 2, 1, 0)
+                this.cancel = this.game.add.button(this.popup.x + 193, this.popup.y + 209, 'button', this.cancell, this, 2, 1, 0)
+
+                this.text = this.game.add.text(this.popup.x , this.popup.y+ 216, ' Probeer opnieuw           Terug ontdekken', { font: '20px Arial', fill: '#ffffff' })
+
+                this.timeDelay = this.game.time.now + 10000000000
+            
+        }
+
+        confirmm(){
+            this.game.state.start("MiniGameState", true, true)
+        }
+
+        cancell(){
+            this.game.state.start("GameRunningState", true, false)
+        }
+
+    }
+
     export class MiniGameState extends Phaser.State {
         constructor() {
             super()
@@ -72,15 +156,171 @@ module Game {
         text: Phaser.Text
         text1: Phaser.Text
         timeDelay: number = 0
+        explosions : any
+        speedY : number
+        timePassed : number = 0
+        asteroidSprite: Phaser.Sprite[] = []
+        life : number = 3
+        
+
+
         preload() {
             this.game.load.image('player', '../dev/Assets/graphics/spaceship.png');
             this.game.load.image("ui", "../dev/Assets/Graphics/ui.png")
             this.game.load.image("star", "../dev/Assets/Graphics/star.png")
             this.game.load.image("popup", "../dev/Assets/Graphics/popup.png")
             this.game.load.image("button", "../dev/Assets/graphics/button.png")
+            this.game.load.image("asteroid", "../dev/Assets/graphics/2.png")
+            this.game.load.image("hearts", "../dev/Assets/graphics/hearts.png")
+            this.game.load.spritesheet("kaboom", "../dev/Assets/graphics/explode.png", 128, 128);
         }
         create() {
+<<<<<<< HEAD
+
+            // Start Physics engine set world bounds and create stars
+            this.game.physics.startSystem(Phaser.Physics.ARCADE);
+            this.game.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
+
+            for (let i = 0; i < 200; i++) {
+                this.star = this.game.add.sprite(this.game.world.randomX, this.game.world.randomY, "star")
+            }
+
+        
+
+            //Asteroid settings
+            for(let i = 0; i < 7; i++){
+                let posy = Math.floor(Math.random() * 800)
+                let posx = Math.floor(Math.random() * 400)
+
+                this.asteroidSprite.push(this.game.add.sprite(posy, posx, 'asteroid'))
+            }
+
+            // hearts settings
+            if(this.life > 2){
+                this.game.add.sprite(window.innerWidth - 100, 100, "hearts")
+                this.game.add.sprite(window.innerWidth - 170, 100, "hearts")
+                this.game.add.sprite(window.innerWidth - 240, 100, "hearts")
+            }
+
+            // for(let i = 0; i < this.life; i++){
+            //     let heatspos = 100
+            //     this.game.add.sprite(window.innerWidth - heatspos, 100, "hearts")
+            //     heatspos + 70
+            // }
+            
+            // physics for asteroid
+            this.game.physics.enable(this.asteroidSprite, Phaser.Physics.ARCADE)
+
+            // Spaceship settings
+            this.spaceshipSprite = this.game.add.sprite(1165, 1916, 'player');
+            this.game.physics.enable(this.spaceshipSprite, Phaser.Physics.ARCADE);
+            this.spaceshipSprite.body.velocity.y = 100;
+            
+            this.spaceshipSprite.body.collideWorldBounds = true
+            this.spaceshipSprite.body.setSize(10, 10, 15, 20)
+            this.spaceshipSprite.body.setCircle(20)
+            this.speedY = Math.floor(Math.random() * 10 + 5)
+            // popup settings
+       
+           
+
+            //add keyboard controls
+            this.Cursors = this.game.input.keyboard.createCursorKeys();
+            this.Keyboard = this.game.input.keyboard
+            this.game.camera.follow(this.spaceshipSprite);
+            
+            
+
+
+        }
+
+        update() {
+               
+            
+           this.timePassed +=1
+           console.log(this.timePassed);
+           
+           
+            if(this.timePassed == 1000){
+               
+                
+                this.game.state.start("WinScreenState", true, false)
+                this.life = 3
+                this.timePassed = 0
+            }
+
+            //move steroids
+            for(let asteroid of this.asteroidSprite){
+                
+                asteroid.y += this.speedY
+             
+                if(asteroid.y > window.innerHeight){
+                    asteroid.x = Math.random() * (window.innerWidth - 100)
+                    asteroid.y = - 400 - (Math.random() * 450)
+                }
+                    
+                this.explosions = this.game.add.group();
+                //   this.game.time.events.loop(4, animateExplosion, this);
+                this.explosions.forEach(asteroid, this);
+         
+                // collision detection for spaceship and asteroids
+                this.game.physics.arcade.overlap(this.spaceshipSprite, asteroid, () => {
+                    // star
+                    console.log("kabooom")
+                    
+                    let explosion = this.game.add.sprite(asteroid.x, asteroid.y, 'kaboom')
+                    explosion.animations.add('kaboom')
+                    explosion.play('kaboom', 30, false, true)
+
+                    asteroid.destroy()
+
+                    this.life--
+                    
+
+                    if(this.life == 0){
+                        console.log('Game over!!')  
+                        // gameover screen
+                        this.game.state.add("GameOverScreenState", GameOverScreenState, true)
+                    }
+                });
+                
+            }
+
+            
+    
+
+            //sets keyboard controls
+            //this.spaceshipSprite.body.setZeroVelocity()
+            this.game.input.update()
+            if (this.Cursors.up.isDown) {
+                this.spaceshipSprite.body.velocity.y = -300
+
+            }
+            else if (this.Cursors.down.isDown) {
+                this.spaceshipSprite.body.velocity.y = 300
+
+            }
+            if (this.Cursors.left.isDown) {
+                this.spaceshipSprite.body.velocity.x = -300;
+            }
+            else if (this.Cursors.right.isDown) {
+                this.spaceshipSprite.body.velocity.x = 300
+            }
+            if (this.Cursors.up.isUp && this.Cursors.down.isUp && this.Cursors.left.isUp && this.Cursors.right.isUp) {
+                this.spaceshipSprite.body.velocity.y = 0
+                this.spaceshipSprite.body.velocity.x = 0
+            }
+
+<<<<<<< HEAD
+
+
+=======
             console.log("minigame started")
+>>>>>>> Amy
+=======
+               
+                
+>>>>>>> Dion
         }
     }
     export class GameRunningState extends Phaser.State {
@@ -391,8 +631,12 @@ module Game {
             
         }
         confirmm() {
+<<<<<<< HEAD
+            this.game.state.start("MiniGameState") 
+=======
             console.log("start minigame")
             this.game.state.start("MiniGameState")
+>>>>>>> Amy
         }
         cancell() {
             this.confirm.pendingDestroy = true
@@ -426,7 +670,11 @@ module Game {
             this.game.state.add("MiniGameState", MiniGameState, false)
             this.game.state.add("TitleScreenState", TitleScreenState, false)
             this.game.state.add("SpaceshipScreenState", SpaceshipScreenState, false)
-            this.game.state.start("TitleScreenState", true, true)
+            this.game.state.add("GameOverScreenState", GameOverScreenState, false)
+            this.game.state.add("WinScreenState", WinScreenState, false)
+            this.game.state.start("WinScreenState", true, true)
+
+            // this.game.state.start("TitleScreenState", true, true)
         }
 
     }
