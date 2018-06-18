@@ -94,16 +94,15 @@ var Game;
             return _this;
         }
         WinScreenState.prototype.preload = function () {
-            this.load.image("popup", "../dev/Assets/Graphics/popup2.png");
-            this.game.load.image("button", "../dev/Assets/graphics/button.png");
+            this.load.image("popup", "../dev/Assets/Graphics/minigamepopup.png");
+            this.game.load.image("button", "../dev/Assets/graphics/winbutton.png");
+            this.game.load.image("button1", "../dev/Assets/graphics/winbutton1.png");
         };
         WinScreenState.prototype.create = function () {
             this.popup = this.game.add.sprite(window.innerWidth / 2.7, window.innerHeight / 2.7, 'popup');
             this.popup.alpha = 0.8;
-            this.game.add.text(this.popup.x / 1.3 + 125, this.popup.y + 10, 'Planeet ontdekt!', { font: '50px Arial', fill: '#ffffff' });
-            this.confirm = this.game.add.button(this.popup.x, this.popup.y + 200, 'button', this.confirmm, this, 2, 1, 0);
-            this.cancel = this.game.add.button(this.popup.x + 193, this.popup.y + 209, 'button', this.cancell, this, 2, 1, 0);
-            this.text = this.game.add.text(this.popup.x, this.popup.y + 216, ' Probeer opnieuw           Terug ontdekken', { font: '20px Arial', fill: '#ffffff' });
+            this.confirm = this.game.add.button(this.popup.x, this.popup.y + 209, 'button', this.confirmm, this, 2, 1, 0);
+            this.cancel = this.game.add.button(this.popup.x + 192, this.popup.y + 209, 'button1', this.cancell, this, 2, 1, 0);
             this.timeDelay = this.game.time.now + 10000000000;
         };
         WinScreenState.prototype.confirmm = function () {
@@ -477,10 +476,8 @@ var Game;
             this.spaceshipSprite.loadTexture("noengineright");
         };
         GameRunningState.prototype.confirmm = function () {
-<<<<<<< HEAD
-=======
+            this.game.state.start("MiniGameState");
             console.log("start minigame");
->>>>>>> Amy
             this.game.state.start("MiniGameState");
         };
         GameRunningState.prototype.cancell = function () {

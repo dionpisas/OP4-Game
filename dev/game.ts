@@ -109,19 +109,20 @@ module Game {
         
         
         preload(){
-            this.load.image("popup", "../dev/Assets/Graphics/popup2.png")
-            this.game.load.image("button", "../dev/Assets/graphics/button.png")
+            this.load.image("popup", "../dev/Assets/Graphics/minigamepopup.png")
+            this.game.load.image("button", "../dev/Assets/graphics/winbutton.png")
+            this.game.load.image("button1", "../dev/Assets/graphics/winbutton1.png")
         }
 
         create(){
             
                 this.popup = this.game.add.sprite(window.innerWidth / 2.7, window.innerHeight / 2.7, 'popup')
                 this.popup.alpha = 0.8
-                this.game.add.text(this.popup.x / 1.3 + 125, this.popup.y + 10, 'Planeet ontdekt!', { font: '50px Arial', fill: '#ffffff' })
-                this.confirm = this.game.add.button(this.popup.x , this.popup.y + 200, 'button', this.confirmm, this, 2, 1, 0)
-                this.cancel = this.game.add.button(this.popup.x + 193, this.popup.y + 209, 'button', this.cancell, this, 2, 1, 0)
+             //   this.game.add.text(this.popup.x / 1.3 + 180, this.popup.y + 15, 'Planeet ontdekt!', { font: '40px Arial', fill: '#ffffff' })
+                this.confirm = this.game.add.button(this.popup.x , this.popup.y + 209, 'button', this.confirmm, this, 2, 1, 0)
+                this.cancel = this.game.add.button(this.popup.x + 192, this.popup.y + 209, 'button1', this.cancell, this, 2, 1, 0)
 
-                this.text = this.game.add.text(this.popup.x , this.popup.y+ 216, ' Probeer opnieuw           Terug ontdekken', { font: '20px Arial', fill: '#ffffff' })
+             //   this.text = this.game.add.text(this.popup.x , this.popup.y+ 216, ' Probeer opnieuw           Terug ontdekken', { font: '20px Arial', fill: '#ffffff' })
 
                 this.timeDelay = this.game.time.now + 10000000000
             
@@ -175,7 +176,7 @@ module Game {
             this.game.load.spritesheet("kaboom", "../dev/Assets/graphics/explode.png", 128, 128);
         }
         create() {
-<<<<<<< HEAD
+
 
             // Start Physics engine set world bounds and create stars
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -311,16 +312,7 @@ module Game {
                 this.spaceshipSprite.body.velocity.x = 0
             }
 
-<<<<<<< HEAD
 
-
-=======
-            console.log("minigame started")
->>>>>>> Amy
-=======
-               
-                
->>>>>>> Dion
         }
     }
     export class GameRunningState extends Phaser.State {
@@ -631,12 +623,12 @@ module Game {
             
         }
         confirmm() {
-<<<<<<< HEAD
+
             this.game.state.start("MiniGameState") 
-=======
+
             console.log("start minigame")
             this.game.state.start("MiniGameState")
->>>>>>> Amy
+
         }
         cancell() {
             this.confirm.pendingDestroy = true
