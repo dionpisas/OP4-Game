@@ -57,72 +57,11 @@ var Game;
         return SpaceshipScreenState;
     }(Phaser.State));
     Game.SpaceshipScreenState = SpaceshipScreenState;
-    var GameOverScreenState = (function (_super) {
-        __extends(GameOverScreenState, _super);
-        function GameOverScreenState() {
-            var _this = _super.call(this) || this;
-            _this.timeDelay = 0;
-            return _this;
-        }
-        GameOverScreenState.prototype.preload = function () {
-            this.load.image("popup", "../dev/Assets/Graphics/popup2.png");
-            this.game.load.image("button", "../dev/Assets/graphics/button.png");
-        };
-        GameOverScreenState.prototype.create = function () {
-            this.popup = this.game.add.sprite(window.innerWidth / 2.7, window.innerHeight / 2.7, 'popup');
-            this.popup.alpha = 0.8;
-            this.game.add.text(this.popup.x / 1.3 + 170, this.popup.y + 10, ' Game over!', { font: '50px Arial', fill: '#ffffff' });
-            this.confirm = this.game.add.button(this.popup.x, this.popup.y + 200, 'button', this.confirmm, this, 2, 1, 0);
-            this.cancel = this.game.add.button(this.popup.x + 193, this.popup.y + 209, 'button', this.cancell, this, 2, 1, 0);
-            this.text = this.game.add.text(this.popup.x, this.popup.y + 216, ' Probeer opnieuw           Terug ontdekken', { font: '20px Arial', fill: '#ffffff' });
-            this.timeDelay = this.game.time.now + 10000000000;
-        };
-        GameOverScreenState.prototype.confirmm = function () {
-            this.game.state.start("MiniGameState", true, true);
-        };
-        GameOverScreenState.prototype.cancell = function () {
-            this.game.state.start("GameRunningState", true, false);
-        };
-        return GameOverScreenState;
-    }(Phaser.State));
-    Game.GameOverScreenState = GameOverScreenState;
-    var WinScreenState = (function (_super) {
-        __extends(WinScreenState, _super);
-        function WinScreenState() {
-            var _this = _super.call(this) || this;
-            _this.timeDelay = 0;
-            return _this;
-        }
-        WinScreenState.prototype.preload = function () {
-            this.load.image("popup", "../dev/Assets/Graphics/popup2.png");
-            this.game.load.image("button", "../dev/Assets/graphics/button.png");
-        };
-        WinScreenState.prototype.create = function () {
-            this.popup = this.game.add.sprite(window.innerWidth / 2.7, window.innerHeight / 2.7, 'popup');
-            this.popup.alpha = 0.8;
-            this.game.add.text(this.popup.x / 1.3 + 125, this.popup.y + 10, 'Planeet ontdekt!', { font: '50px Arial', fill: '#ffffff' });
-            this.confirm = this.game.add.button(this.popup.x, this.popup.y + 200, 'button', this.confirmm, this, 2, 1, 0);
-            this.cancel = this.game.add.button(this.popup.x + 193, this.popup.y + 209, 'button', this.cancell, this, 2, 1, 0);
-            this.text = this.game.add.text(this.popup.x, this.popup.y + 216, ' Probeer opnieuw           Terug ontdekken', { font: '20px Arial', fill: '#ffffff' });
-            this.timeDelay = this.game.time.now + 10000000000;
-        };
-        WinScreenState.prototype.confirmm = function () {
-            this.game.state.start("MiniGameState", true, true);
-        };
-        WinScreenState.prototype.cancell = function () {
-            this.game.state.start("GameRunningState", true, false);
-        };
-        return WinScreenState;
-    }(Phaser.State));
-    Game.WinScreenState = WinScreenState;
     var MiniGameState = (function (_super) {
         __extends(MiniGameState, _super);
         function MiniGameState() {
             var _this = _super.call(this) || this;
             _this.timeDelay = 0;
-            _this.timePassed = 0;
-            _this.asteroidSprite = [];
-            _this.life = 3;
             return _this;
         }
         MiniGameState.prototype.preload = function () {
@@ -131,90 +70,9 @@ var Game;
             this.game.load.image("star", "../dev/Assets/Graphics/star.png");
             this.game.load.image("popup", "../dev/Assets/Graphics/popup.png");
             this.game.load.image("button", "../dev/Assets/graphics/button.png");
-            this.game.load.image("asteroid", "../dev/Assets/graphics/2.png");
-            this.game.load.image("hearts", "../dev/Assets/graphics/hearts.png");
-            this.game.load.spritesheet("kaboom", "../dev/Assets/graphics/explode.png", 128, 128);
         };
         MiniGameState.prototype.create = function () {
-            this.game.physics.startSystem(Phaser.Physics.ARCADE);
-            this.game.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
-            for (var i = 0; i < 200; i++) {
-                this.star = this.game.add.sprite(this.game.world.randomX, this.game.world.randomY, "star");
-            }
-            for (var i = 0; i < 7; i++) {
-                var posy = Math.floor(Math.random() * 800);
-                var posx = Math.floor(Math.random() * 400);
-                this.asteroidSprite.push(this.game.add.sprite(posy, posx, 'asteroid'));
-            }
-            if (this.life > 2) {
-                this.game.add.sprite(window.innerWidth - 100, 100, "hearts");
-                this.game.add.sprite(window.innerWidth - 170, 100, "hearts");
-                this.game.add.sprite(window.innerWidth - 240, 100, "hearts");
-            }
-            this.game.physics.enable(this.asteroidSprite, Phaser.Physics.ARCADE);
-            this.spaceshipSprite = this.game.add.sprite(1165, 1916, 'player');
-            this.game.physics.enable(this.spaceshipSprite, Phaser.Physics.ARCADE);
-            this.spaceshipSprite.body.velocity.y = 100;
-            this.spaceshipSprite.body.collideWorldBounds = true;
-            this.spaceshipSprite.body.setSize(10, 10, 15, 20);
-            this.spaceshipSprite.body.setCircle(20);
-            this.speedY = Math.floor(Math.random() * 10 + 5);
-            this.Cursors = this.game.input.keyboard.createCursorKeys();
-            this.Keyboard = this.game.input.keyboard;
-            this.game.camera.follow(this.spaceshipSprite);
-        };
-        MiniGameState.prototype.update = function () {
-            var _this = this;
-            this.timePassed += 1;
-            console.log(this.timePassed);
-            if (this.timePassed == 1000) {
-                this.game.state.start("WinScreenState", true, false);
-                this.life = 3;
-                this.timePassed = 0;
-            }
-            var _loop_1 = function (asteroid) {
-                asteroid.y += this_1.speedY;
-                if (asteroid.y > window.innerHeight) {
-                    asteroid.x = Math.random() * (window.innerWidth - 100);
-                    asteroid.y = -400 - (Math.random() * 450);
-                }
-                this_1.explosions = this_1.game.add.group();
-                this_1.explosions.forEach(asteroid, this_1);
-                this_1.game.physics.arcade.overlap(this_1.spaceshipSprite, asteroid, function () {
-                    console.log("kabooom");
-                    var explosion = _this.game.add.sprite(asteroid.x, asteroid.y, 'kaboom');
-                    explosion.animations.add('kaboom');
-                    explosion.play('kaboom', 30, false, true);
-                    asteroid.destroy();
-                    _this.life--;
-                    if (_this.life == 0) {
-                        console.log('Game over!!');
-                        _this.game.state.add("GameOverScreenState", GameOverScreenState, true);
-                    }
-                });
-            };
-            var this_1 = this;
-            for (var _i = 0, _a = this.asteroidSprite; _i < _a.length; _i++) {
-                var asteroid = _a[_i];
-                _loop_1(asteroid);
-            }
-            this.game.input.update();
-            if (this.Cursors.up.isDown) {
-                this.spaceshipSprite.body.velocity.y = -300;
-            }
-            else if (this.Cursors.down.isDown) {
-                this.spaceshipSprite.body.velocity.y = 300;
-            }
-            if (this.Cursors.left.isDown) {
-                this.spaceshipSprite.body.velocity.x = -300;
-            }
-            else if (this.Cursors.right.isDown) {
-                this.spaceshipSprite.body.velocity.x = 300;
-            }
-            if (this.Cursors.up.isUp && this.Cursors.down.isUp && this.Cursors.left.isUp && this.Cursors.right.isUp) {
-                this.spaceshipSprite.body.velocity.y = 0;
-                this.spaceshipSprite.body.velocity.x = 0;
-            }
+            console.log("minigame started");
         };
         return MiniGameState;
     }(Phaser.State));
@@ -477,10 +335,7 @@ var Game;
             this.spaceshipSprite.loadTexture("noengineright");
         };
         GameRunningState.prototype.confirmm = function () {
-<<<<<<< HEAD
-=======
             console.log("start minigame");
->>>>>>> Amy
             this.game.state.start("MiniGameState");
         };
         GameRunningState.prototype.cancell = function () {
@@ -503,9 +358,7 @@ var Game;
             this.game.state.add("MiniGameState", MiniGameState, false);
             this.game.state.add("TitleScreenState", TitleScreenState, false);
             this.game.state.add("SpaceshipScreenState", SpaceshipScreenState, false);
-            this.game.state.add("GameOverScreenState", GameOverScreenState, false);
-            this.game.state.add("WinScreenState", WinScreenState, false);
-            this.game.state.start("WinScreenState", true, true);
+            this.game.state.start("TitleScreenState", true, true);
         }
         return SpaceGame;
     }());
